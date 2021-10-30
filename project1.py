@@ -15,6 +15,7 @@ SelectionSort
 
 
 
+from numpy.core.fromnumeric import _wrapfunc
 from numpy.core.function_base import _linspace_dispatcher
 from numpy.core.numeric import identity
 from project1tests import *
@@ -47,7 +48,7 @@ def SelectionSort(listToSort):
     # the list is divided into sorted part and unsorted part
     # continuously find the smallest number in the unsorted part
     # put the smallest number at the end of the sorted array
-    for i in range(len(listToSort)):
+    for i in range(len(listToSort)-1):
         # find the minimum in list[i...]
         min = findMin(listToSort, i)
         swap(listToSort, i, min)
@@ -58,28 +59,31 @@ def SelectionSort(listToSort):
 InsertionSort
 """
 
+# bubble donw the element at list[index] to the correct place ()
 
-def insert(list, index, j):
-    # insert nuber number at j into index
-    # implemented using warp
 
-    # warp forward
-    while(j > index):
-        swap(list, j-1, j)
-        j -= 1
+def bubbleDown(list, index):
+    while(index > 0):
+        if(list[index] < list[index - 1]):
+            swap(list, index, index-1)
+            index -= 1
+        else:
+            break
 
 
 def InsertionSort(listToSort):
     # list is divided into sort anf unsorted part,
-    # continuous find the smallest number in unsorted part
-    # and insert it into the sorted part
+    # choose the first element from unsorted part and placed it in the correct place by bubble down
     # input :
     #   listToSort : a list of integer
     # output :
     #   a sorted list
+
+    # invariant :
+    #           after each loop list[0...i] is sorted
+    #           we put list[i+1] at the correct place by bubble it down
     for i in range(len(listToSort)):
-        min = findMin(listToSort, i)
-        insert(listToSort, i, min)
+        bubbleDown(listToSort, i)
     return
 
 
@@ -100,21 +104,15 @@ def BubbleSort(listToSort):
     #       sorted list
 
     for i in range(len(listToSort)-1):
-        sorted = False
-        # if sorted is set to true in the inner loop,
-        # then no sort needed, return
-        if(sorted):
-            return
+        sorted = True
         for j in range(0, len(listToSort) - 1 - i):
-            # flag used to check if swap happened in the inner looop
-            hasSwap = False
             # swap continuously
             if(listToSort[j] > listToSort[j+1]):
                 swap(listToSort, j, j+1)
-                hasSwap = True
+                sorted = False
             # if swap does not happen, then set sorted to true
-            if(hasSwap == False):
-                sorted = True
+        if(sorted):
+            break
     return
 
 
