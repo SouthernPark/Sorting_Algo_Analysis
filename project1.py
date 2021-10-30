@@ -220,15 +220,61 @@ def lomutoPartition(list, lo, hi):
     return i
 
 
-def QuickSortHelper(listToSort, i, j):
+def QuickSortHelperLomuto(listToSort, i, j):
     # base case
     if(i >= j):
         return
     # partition the array
     pivot = lomutoPartition(listToSort, i, j)
 
-    QuickSortHelper(listToSort, i, pivot-1)
-    QuickSortHelper(listToSort, pivot+1, j)
+    QuickSortHelperLomuto(listToSort, i, pivot-1)
+    QuickSortHelperLomuto(listToSort, pivot+1, j)
+
+    return
+
+
+def hoarePartiton(list, lo, hi):
+    # invariant :
+    # after each swap :  list[0...left] <= pivot
+    #                    list[right..hi] >= pivot
+
+    # after the final loop
+    #       list[right] <= pivot
+    #       list[right + 1...hi] >= pivot
+    #       and list[0...left-1] <= pivot
+    #       right <= left
+
+    # we can not set the list[hi] as pivto, which will cause infinite loop
+    pivot = list[lo]
+    left = lo - 1
+    right = hi + 1
+    while(True):
+
+        # find the first element in the left that is greater than or equal to the pivot
+        while(True):
+            left += 1
+            if(list[left] >= pivot):
+                break
+        # find the first element in the right that is smaller than or equal to the pivot
+        while(True):
+            right -= 1
+            if(list[right] <= pivot):
+                break
+
+        # left < right, then we should swap, becase it is the wrong order
+        # else return
+        if(left < right):
+            swap(list, left, right)
+        else:
+            return right
+
+
+def QuickSortHelperHoare(list, lo, hi):
+    if(lo >= hi):
+        return
+    pivot = hoarePartiton(list, lo, hi)
+    QuickSortHelperHoare(list, lo, pivot)
+    QuickSortHelperHoare(list, pivot+1, hi)
 
     return
 
@@ -238,7 +284,8 @@ def QuickSort(listToSort, i=0, j=None):
         j = len(listToSort)-1
     else:
         j -= 1
-    QuickSortHelper(listToSort, i, j)
+    # QuickSortHelperLomuto(listToSort, i, j)
+    QuickSortHelperLomuto(listToSort, i, j)
 
     return
 
